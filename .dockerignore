@@ -1,0 +1,17 @@
+k8s-files
+.dockerignore
+.git
+public/assets
+vendor/cache
+tmp
+log
+.idea
+config/*_local.yml
+config/environments/local/*
+*.swp
+*.swo
+.DS_Store
+coverage
+docker-compose.yml
+codeship.aes
+dockercfg
