@@ -57,7 +57,10 @@ along with the default permissions needed by Kubernetes:
 },
 {
     "Effect": "Allow",
-    "Action": "route53:ChangeResourceRecordSets",
+    "Action": [
+      "route53:ChangeResourceRecordSets",
+      "route53:GetHostedZone"
+    ],
     "Resource": "*"
 }
 ```
