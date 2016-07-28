@@ -17,8 +17,10 @@ class Watcher
     @_logger ||= begin
       require 'ffx/container_logging'
       Ffx::ContainerLogging::ConfigurationService.new(app_name: 'area-53').logger
-    rescue
-      Logger.new(STDOUT)
+    rescue LoadError
+      logger = Logger.new(STDOUT)
+      logger.info(status: 'setup_log', msg: 'ffx/container_logging not present, using stdout')
+      logger
     end
   end
 
