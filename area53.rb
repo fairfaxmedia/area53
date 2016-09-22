@@ -7,10 +7,14 @@ class Watcher
     @route53_client = Route53Client.new(ENV['HOSTED_ZONE_ID'])
     logger.info(status: 'startup', hosted_zone_id: ENV['HOSTED_ZONE_ID'])
     KubeClient.new.watch_dns.each do |notice|
-      new_notice(notice)
+      begin
+        new_notice(notice)
+      rescue => ex
+        logger.error(status: 'end_watch', error: ex)
+      end
     end
   rescue => ex
-    logger.error(status: 'end_watch', error: ex)
+    logger.error(status: 'end_all_watch', error: ex)
   end
 
   def self.logger
