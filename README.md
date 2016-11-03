@@ -1,8 +1,11 @@
 # Kubernetes => Route53 Mapping Service
 
-This is a Kubernetes service that polls services on its cluster that are
-configured with the label `dns=route53` and adds an entry to route 53 as
-specified by the annotation `domainName=test-app`
+This is a Kubernetes service that polls Services and Ingresses on its cluster that are configured 
+and adds an entry to Route 53.
+
+Services are configured with the label `dns=route53` and annotation `domainName=test-app`.
+
+Ingresses are configured with the annotation `elb=unique-id.eu-west-1.elb.amazonaws.com`.
 
 The app requires the following environment variables to be set in order to run:
 * `HOSTED_ZONE_ID=EXAMPLEID` - The hosted zone ID of the route53 zone you wish the app to modify
@@ -11,6 +14,9 @@ The app requires the following environment variables to be set in order to run:
 * `KUBERNETES_SERVICE_HOST=127.0.0.1` - IP of Kubernetes service API, should be in env by default
 * `KUBERNETES_PORT_443_TCP_PORT=443` - Port of Kubernetes service API, should be in env by default
 * `TOKEN_PATH=/var/run/secrets/kubernetes.io/serviceaccount/token` - path to token file for kube service account, set to path shown by default
+* `ELB=unique-id.eu-west-1.elb.amazonaws.com` - the address of the default ELB to use for Ingress based addresses, if not specified Ingresses will not be watched 
+
+## Example
 
 For example, given the below Kubernetes service definition:
 
@@ -44,6 +50,8 @@ spec:
 A DNS `CNAME` record is created/modified for
 `test-app.myhostedzonedomain.com` pointing to the Elastic Load Balancer
 that is configured by Kubernetes.
+
+## IAM Actions Required
 
 This service expects that it is running on a Kubernetes node on AWS and
 that the IAM profile for that node is set up to allow the following,
