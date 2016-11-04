@@ -38,7 +38,7 @@ class Route53Client
                                                              resource_record_set: {
                                                                  name: host_name,
                                                                  type: type,
-                                                                 ttl: 5,
+                                                                 ttl: dns_ttl,
                                                                  resource_records: [{
                                                                                         value: resource_value
                                                                                     }]
@@ -48,5 +48,9 @@ class Route53Client
                                        })
   rescue Aws::Route53::Errors::ServiceError => e
     @logger.error(e.message)
+  end
+
+  def dns_ttl
+    ENV['ROUTE53_TTL'].present? && ENV['ROUTE53_TTL'].to_i || 5
   end
 end
