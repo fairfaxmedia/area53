@@ -1,9 +1,14 @@
+require_relative '../area53'
 require_relative '../kube_client'
 require_relative '../route53_client'
 require_relative '../watchers/service_watcher'
 require_relative '../watchers/ingress_watcher'
 
-require 'ffx/container_logging'
+begin
+  require 'ffx/container_logging'
+rescue LoadError
+  puts 'ffx/container_logging not present, using stdout'
+end
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

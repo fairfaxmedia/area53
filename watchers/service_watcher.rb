@@ -9,9 +9,13 @@ class ServiceWatcher
     loop do
       @logger.info(watcher: 'Service', status: 'startup', hosted_zone_id: ENV['HOSTED_ZONE_ID'])
       @kube_client.watch_services.each do |notice|
-        new_notice(notice)
+        begin
+          new_notice(notice)
+        rescue => ex
+          logger.error(watcher: 'Service', status: 'end_watch', error: ex)
+        end
       end
-      @logger.info(watcher: 'Service', status: 'end_watch')
+      @logger.info(watcher: 'Service', status: 'end_all_watch')
     end
   end
 

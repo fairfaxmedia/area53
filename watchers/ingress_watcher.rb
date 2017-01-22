@@ -10,9 +10,13 @@ class IngressWatcher
     loop do
       @logger.info(watcher: 'Ingress', status: 'startup', hosted_zone_id: ENV['HOSTED_ZONE_ID'])
       @kube_client.watch_ingresses.each do |notice|
-        new_notice(notice)
+        begin
+          new_notice(notice)
+        rescue => ex
+          logger.error(watcher: 'Ingress', status: 'end_watch', error: ex)
+        end
       end
-      @logger.info(watcher: 'Ingress', status: 'end_watch')
+      @logger.info(watcher: 'Ingress', status: 'end_all_watch')
     end
   end
 

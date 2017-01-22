@@ -91,5 +91,33 @@ describe Route53Client do
         subject.change_dns(host_name, resource_value, type, action)
       end
     end
+
+    describe 'DNS time to live' do
+      context 'when TTL is configured' do
+        before do
+          ENV['ROUTE53_TTL'] = '60'
+        end
+
+        it 'uses the correct TTL' do
+          expect(client).to receive(:change_resource_record_sets) do |hash|
+            expect(hash.dig(:change_batch, :changes, 0, :resource_record_set, :ttl)).to eq(60)
+          end
+          subject.change_dns(host_name, resource_value, type, action)
+        end
+      end
+
+      context 'when TTL is not configured' do
+        before do
+          ENV.delete('ROUTE53_TTL')
+        end
+
+        it 'uses a default TTL' do
+          expect(client).to receive(:change_resource_record_sets) do |hash|
+            expect(hash.dig(:change_batch, :changes, 0, :resource_record_set, :ttl)).to be_kind_of(Integer)
+          end
+          subject.change_dns(host_name, resource_value, type, action)
+        end
+      end
+    end
   end
 end
