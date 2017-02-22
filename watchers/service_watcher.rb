@@ -12,7 +12,7 @@ class ServiceWatcher
         begin
           new_notice(notice)
         rescue => ex
-          logger.error(watcher: 'Service', status: 'end_watch', error: ex)
+          @logger.error(watcher: 'Service', status: 'end_watch', error: ex)
         end
       end
       @logger.info(watcher: 'Service', status: 'end_all_watch')
