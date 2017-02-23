@@ -13,7 +13,7 @@ class IngressWatcher
         begin
           new_notice(notice)
         rescue => ex
-          logger.error(watcher: 'Ingress', status: 'end_watch', error: ex)
+          @logger.error(watcher: 'Ingress', status: 'end_watch', error: ex)
         end
       end
       @logger.info(watcher: 'Ingress', status: 'end_all_watch')
